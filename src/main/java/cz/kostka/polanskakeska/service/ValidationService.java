@@ -1,5 +1,7 @@
 package cz.kostka.polanskakeska.service;
 
+import cz.kostka.polanskakeska.utils.AnswerUtil;
+import cz.kostka.polanskakeska.utils.CacheResultUtil;
 import cz.kostka.polanskakeska.dto.ResultDTO;
 import cz.kostka.polanskakeska.dto.ValidationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +21,20 @@ public class ValidationService {
     public ResultDTO verify(final ValidationDTO validationDTO) {
         final var team = teamService.getTeamByName(validationDTO.getTeamName());
         if (team.isEmpty()) {
-            return new ResultDTO(false, "Zadaný tým neexistuje. Kontaktujte pořadatele.", "");
+            return CacheResultUtil.createFailedResult("Zadaný tým neexistuje. Kontaktujte pořadatele.");
         }
 
         final var cache = cacheService.getCacheByNumber(validationDTO.getCacheNumber());
         if (cache.isEmpty()) {
-            return new ResultDTO(false, "Zadané číslo kešky neexistuje. Kontaktujte pořadatele.", "");
+            return CacheResultUtil.createFailedResult("Zadané číslo kešky neexistuje. Kontaktujte pořadatele.");
         }
 
-
-        final var answer = validationDTO.getAnswer();
+        final var answer = AnswerUtil.normalize(validationDTO.getAnswer());
         if (!cache.get().getPasswords().contains(answer)) {
-            return new ResultDTO(false, "Zadané řešení není správné. Zkuste to znovu :)", "");
-        } else {
-            final var successfulTeam = team.get();
-            successfulTeam.getSolvedCaches().add(cache.get());
-            teamService.save(successfulTeam);
-
-            return new ResultDTO(true, "Správně!!!", cache.get().getCode());
+            return CacheResultUtil.createFailedResult("Zadané řešení není správné. Zkuste to znovu :)");
         }
+
+        teamService.addSolvedCache(team.get(), cache.get());
+        return CacheResultUtil.createSuccessfulResult("Správně!!!", cache.get());
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ public class Cache {
     private String code;
 
     @ElementCollection
-    private Set<String> passwords;
+    private Set<String> passwords = new HashSet<>();
 
     public Cache(final Long id, final int number, final String code, final Set<String> passwords) {
         this.id = id;
