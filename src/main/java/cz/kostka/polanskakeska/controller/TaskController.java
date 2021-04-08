@@ -40,9 +40,4 @@ public class TaskController {
         redirectAttributes.addFlashAttribute("result", validationService.verify(cacheValidationDTO));
         return "redirect:/";
     }
-
-    @GetMapping("/map")
-    public String map() {
-        return "map";
-    }
 }
