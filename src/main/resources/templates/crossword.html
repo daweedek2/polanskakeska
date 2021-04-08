@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments/head :: head('Polanská keška')">
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/header :: header()"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Seznam indícií</h2>
+            <div th:if="${crossword}" class="alert alert-success">
+                <div th:each="word : ${crossword.words}">
+                    <p style="text-align:center">
+                        <th:block th:each="part : ${word.parts}">
+                            <span>|</span>
+                            <span th:text="${part.code}"></span>
+                            <span>|</span>
+                        </th:block>
+                    </p>
+                </div>
+            </div>
+            <div th:if="${result?.isCorrect == false}" class="alert alert-danger">
+                <p><strong>Bohužel...</strong></p>
+                <p th:text="${result.message}"></p>
+            </div>
+            <div th:unless="${crossword}">
+                <h2>Ověření</h2>
+                <form th:action="|/crossword/verify|" th:object="${form}" method="post">
+                    <div class="form-group">
+                        <label for="teamName">Jméno týmu</label>
+                        <input id="teamName" type="text" th:field="*{teamName}" class="form-control" required />
+                        <p th:if="${#fields.hasErrors('teamName')}" th:class="'error'" th:errors="*{teamName}" id="teamNameErrorMessage"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberCount">Počet členů</label>
+                        <select id="memberCount" type="text" th:field="*{memberCount}" class="form-control" required />
+                        <option th:each="i : ${#numbers.sequence(0, 15)}" th:value="${i}" th:text="${i}"
+                                th:selected="${i==0}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Ověřit</button>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <a th:href="@{/}" class="btn btn-secondary">Zpět</a>
+            </div>
+        </div>
+    </div>
+    <div th:insert="fragments/footer :: footer()"></div>
+</div>
+</body>
+</html>

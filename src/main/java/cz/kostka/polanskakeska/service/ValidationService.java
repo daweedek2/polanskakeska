@@ -1,9 +1,11 @@
 package cz.kostka.polanskakeska.service;
 
+import cz.kostka.polanskakeska.dto.CrosswordCheckDTO;
+import cz.kostka.polanskakeska.entity.Team;
 import cz.kostka.polanskakeska.utils.AnswerUtil;
-import cz.kostka.polanskakeska.utils.CacheResultUtil;
+import cz.kostka.polanskakeska.utils.ResultUtil;
 import cz.kostka.polanskakeska.dto.ResultDTO;
-import cz.kostka.polanskakeska.dto.ValidationDTO;
+import cz.kostka.polanskakeska.dto.CacheValidationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,23 +20,32 @@ public class ValidationService {
         this.cacheService = cacheService;
     }
 
-    public ResultDTO verify(final ValidationDTO validationDTO) {
-        final var team = teamService.getTeamByName(validationDTO.getTeamName());
+    public Team validateCrosswordRequest(final CrosswordCheckDTO dto) {
+        final var team = teamService.getTeamByName(dto.getTeamName());
         if (team.isEmpty()) {
-            return CacheResultUtil.createFailedResult("Zadaný tým neexistuje. Kontaktujte pořadatele.");
+            return null;
         }
 
-        final var cache = cacheService.getCacheByNumber(validationDTO.getCacheNumber());
+        return team.get().getMembersCount() == dto.getMemberCount() ? team.get() : null;
+    }
+
+    public ResultDTO verify(final CacheValidationDTO cacheValidationDTO) {
+        final var team = teamService.getTeamByName(cacheValidationDTO.getTeamName());
+        if (team.isEmpty()) {
+            return ResultUtil.createFailedResult("Zadaný tým neexistuje. Kontaktujte pořadatele.");
+        }
+
+        final var cache = cacheService.getCacheByNumber(cacheValidationDTO.getCacheNumber());
         if (cache.isEmpty()) {
-            return CacheResultUtil.createFailedResult("Zadané číslo kešky neexistuje. Kontaktujte pořadatele.");
+            return ResultUtil.createFailedResult("Zadané číslo kešky neexistuje. Kontaktujte pořadatele.");
         }
 
-        final var answer = AnswerUtil.normalize(validationDTO.getAnswer());
+        final var answer = AnswerUtil.normalize(cacheValidationDTO.getAnswer());
         if (!cache.get().getPasswords().contains(answer)) {
-            return CacheResultUtil.createFailedResult("Zadané řešení není správné. Zkuste to znovu :)");
+            return ResultUtil.createFailedResult("Zadané řešení není správné. Zkuste to znovu :)");
         }
 
         teamService.addSolvedCache(team.get(), cache.get());
-        return CacheResultUtil.createSuccessfulResult("Správně!!!", cache.get());
+        return ResultUtil.createSuccessfulResult("Správně!!!", cache.get());
     }
 }

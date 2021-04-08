@@ -1,6 +1,7 @@
 package cz.kostka.polanskakeska.service;
 
 import cz.kostka.polanskakeska.entity.Cache;
+import cz.kostka.polanskakeska.entity.Crossword;
 import cz.kostka.polanskakeska.entity.Team;
 import cz.kostka.polanskakeska.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import java.util.TimeZone;
 
 @Service
 public class TeamService {
-
+    private final CrosswordService crosswordService;
     private final TeamRepository teamRepository;
 
     @Autowired
-    public TeamService(final TeamRepository teamRepository) {
+    public TeamService(final CrosswordService crosswordService,
+                       final TeamRepository teamRepository) {
+        this.crosswordService = crosswordService;
         this.teamRepository = teamRepository;
     }
 
@@ -27,6 +30,9 @@ public class TeamService {
     }
 
     public Team save(final Team team) {
+        if (team.getCrosswordId() == null) {
+            team.setCrosswordId(crosswordService.createEmptyCrossword().getId());
+        }
         return teamRepository.save(team);
     }
 
@@ -39,11 +45,31 @@ public class TeamService {
     }
 
     public void addSolvedCache(final Team team, final Cache cache) {
-        final LocalDateTime currentTime = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(System.currentTimeMillis()),
-                TimeZone.getDefault().toZoneId());
+        final LocalDateTime currentTime = getCurrentTime();
         team.getSolvedCaches().add(cache);
         team.getSolvedCachesTimestamps().putIfAbsent(String.valueOf(cache.getNumber()), currentTime);
+        updateTeamCrossword(team, cache);
         this.save(team);
+    }
+
+    private void updateTeamCrossword(final Team team, final Cache cache) {
+        Crossword currentCrossword;
+        if (team.getCrosswordId() == null || crosswordService.getById(team.getCrosswordId()) == null) {
+            currentCrossword = crosswordService.createEmptyCrossword();
+        } else {
+            currentCrossword = crosswordService.getById(team.getCrosswordId());
+        }
+
+        currentCrossword.getPartMap().replace(cache.getNumber(), cache.getPart().getId());
+
+        crosswordService.save(currentCrossword);
+        team.setCrosswordId(currentCrossword.getId());
+        this.save(team);
+    }
+
+    private LocalDateTime getCurrentTime() {
+        return LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(System.currentTimeMillis()),
+                TimeZone.getDefault().toZoneId());
     }
 }

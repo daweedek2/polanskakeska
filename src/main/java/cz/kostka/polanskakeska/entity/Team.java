@@ -1,14 +1,6 @@
 package cz.kostka.polanskakeska.entity;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +18,9 @@ public class Team {
     @Column
     private String name;
 
+    @Column
+    private int membersCount;
+
     @ElementCollection
     @CollectionTable(name = "solved_cache_timestamps",
             joinColumns = {@JoinColumn(name = "team_id", referencedColumnName = "id")})
@@ -36,11 +31,16 @@ public class Team {
     @ElementCollection
     private Set<Cache> solvedCaches = new HashSet<>();
 
-    public Team(final Long id, final String name, final Map<String, LocalDateTime> solvedCachesTimestamps, final Set<Cache> solvedCaches) {
+    @Column
+    private Long crosswordId;
+
+    public Team(final Long id, final String name, final int membersCount, final Map<String, LocalDateTime> solvedCachesTimestamps, final Set<Cache> solvedCaches, final Long crosswordId) {
         this.id = id;
         this.name = name;
+        this.membersCount = membersCount;
         this.solvedCachesTimestamps = solvedCachesTimestamps;
         this.solvedCaches = solvedCaches;
+        this.crosswordId = crosswordId;
     }
 
     public Team() {
@@ -76,5 +76,21 @@ public class Team {
 
     public void setSolvedCachesTimestamps(final Map<String, LocalDateTime> solvedCachesTimestamps) {
         this.solvedCachesTimestamps = solvedCachesTimestamps;
+    }
+
+    public int getMembersCount() {
+        return membersCount;
+    }
+
+    public void setMembersCount(final int membersCount) {
+        this.membersCount = membersCount;
+    }
+
+    public Long getCrosswordId() {
+        return crosswordId;
+    }
+
+    public void setCrosswordId(final Long crosswordId) {
+        this.crosswordId = crosswordId;
     }
 }

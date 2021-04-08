@@ -4,34 +4,28 @@ public class ResultDTO {
     private boolean isCorrect;
     private String message;
     private String code;
+    private int cacheNumber;
 
-    public ResultDTO(final boolean isCorrect, final String message, final String code) {
+    public ResultDTO(final boolean isCorrect, final String message, final String code, final int cacheNumber) {
         this.isCorrect = isCorrect;
         this.message = message;
         this.code = code;
+        this.cacheNumber = cacheNumber;
     }
 
     public boolean isCorrect() {
         return isCorrect;
     }
 
-    public void setCorrect(final boolean correct) {
-        isCorrect = correct;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
     }
 
     public String getCode() {
         return code;
     }
 
-    public void setCode(final String code) {
-        this.code = code;
+    public int getCacheNumber() {
+        return cacheNumber;
     }
 }

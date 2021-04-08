@@ -1,14 +1,17 @@
 package cz.kostka.polanskakeska.dto;
 
-public class ValidationDTO {
+public class CacheValidationDTO {
     private int cacheNumber;
     private String teamName;
     private String answer;
 
-    public ValidationDTO(final int cacheNumber, final String teamName, final String answer) {
+    public CacheValidationDTO(final int cacheNumber, final String teamName, final String answer) {
         this.cacheNumber = cacheNumber;
         this.teamName = teamName;
         this.answer = answer;
+    }
+
+    public CacheValidationDTO() {
     }
 
     public int getCacheNumber() {
