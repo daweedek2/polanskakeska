@@ -3,11 +3,13 @@ package cz.kostka.polanskakeska.dto;
 public class CacheValidationDTO {
     private int cacheNumber;
     private String teamName;
+    private String email;
     private String answer;
 
-    public CacheValidationDTO(final int cacheNumber, final String teamName, final String answer) {
+    public CacheValidationDTO(final int cacheNumber, final String teamName, final String email, final String answer) {
         this.cacheNumber = cacheNumber;
         this.teamName = teamName;
+        this.email = email;
         this.answer = answer;
     }
 
@@ -36,5 +38,13 @@ public class CacheValidationDTO {
 
     public void setAnswer(final String answer) {
         this.answer = answer;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
     }
 }

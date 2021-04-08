@@ -21,12 +21,13 @@ public class ValidationService {
     }
 
     public Team validateCrosswordRequest(final CrosswordCheckDTO dto) {
-        final var team = teamService.getTeamByName(dto.getTeamName());
-        if (team.isEmpty()) {
+        final var teamOpional = teamService.getTeamByName(dto.getTeamName());
+        if (teamOpional.isEmpty()) {
             return null;
         }
 
-        return team.get().getMembersCount() == dto.getMemberCount() ? team.get() : null;
+        final Team team = teamOpional.get();
+        return dto.getEmail().equals(team.getEmail()) ? team : null;
     }
 
     public ResultDTO verify(final CacheValidationDTO cacheValidationDTO) {
@@ -38,6 +39,10 @@ public class ValidationService {
         final var cache = cacheService.getCacheByNumber(cacheValidationDTO.getCacheNumber());
         if (cache.isEmpty()) {
             return ResultUtil.createFailedResult("Zadané číslo kešky neexistuje. Kontaktujte pořadatele.");
+        }
+
+        if (!cacheValidationDTO.getEmail().equals(team.get().getEmail())) {
+            return ResultUtil.createFailedResult("Kombinace emailu a jména týmu není platná. Kontaktujte pořadatele.");
         }
 
         final var answer = AnswerUtil.normalize(cacheValidationDTO.getAnswer());

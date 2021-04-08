@@ -2,11 +2,11 @@ package cz.kostka.polanskakeska.dto;
 
 public final class CrosswordCheckDTO {
     private String teamName;
-    private int memberCount;
+    private String email;
 
-    public CrosswordCheckDTO(final String teamName, final int memberCount) {
+    public CrosswordCheckDTO(final String teamName, final String email) {
         this.teamName = teamName;
-        this.memberCount = memberCount;
+        this.email = email;
     }
 
     public CrosswordCheckDTO() {
@@ -20,11 +20,11 @@ public final class CrosswordCheckDTO {
         this.teamName = teamName;
     }
 
-    public int getMemberCount() {
-        return memberCount;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMemberCount(final int memberCount) {
-        this.memberCount = memberCount;
+    public void setEmail(final String email) {
+        this.email = email;
     }
 }

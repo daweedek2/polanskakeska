@@ -32,11 +32,9 @@
                         <p th:if="${#fields.hasErrors('teamName')}" th:class="'error'" th:errors="*{teamName}" id="teamNameErrorMessage"></p>
                     </div>
                     <div class="form-group">
-                        <label for="memberCount">Počet členů</label>
-                        <select id="memberCount" type="text" th:field="*{memberCount}" class="form-control" required />
-                        <option th:each="i : ${#numbers.sequence(0, 15)}" th:value="${i}" th:text="${i}"
-                                th:selected="${i==0}"></option>
-                        </select>
+                        <label for="email">Email</label>
+                        <input id="email" type="email" th:field="*{email}" class="form-control" required />
+                        <p th:if="${#fields.hasErrors('email')}" th:class="'error'" th:errors="*{email}" id="emailErrorMessage"></p>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="submit">Ověřit</button>
