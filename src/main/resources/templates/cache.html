@@ -11,7 +11,7 @@
                 <p><strong>Správně!</strong></p>
                 <p th:text="'Podařilo se vám vyřešit úkol kešky číslo ' + ${result?.cacheNumber} + '.'"></p>
                 <p th:text="'Objevená indície je: \'' + ${result?.code} + '\'.'"></p>
-                <a th:href="@{/crossword}" class="btn btn-secondary">Přejít na křížovku</a>
+                <a th:href="@{/crossword}" class="btn btn-secondary">Přejít na seznam indícií</a>
             </div>
             <div th:if="${result?.isCorrect == false}" class="alert alert-danger">
                 <p><strong>Bohužel...</strong></p>
@@ -41,6 +41,9 @@
             </form>
             <div>
                 <a th:href="@{/crossword}" class="btn btn-secondary">Přejít na seznam indícií</a>
+            </div>
+            <div>
+                <a th:href="@{/map}" class="btn btn-secondary">Přejít na mapu</a>
             </div>
         </div>
     </div>
