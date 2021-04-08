@@ -2,6 +2,7 @@ package cz.kostka.polanskakeska.service;
 
 import cz.kostka.polanskakeska.entity.Cache;
 import cz.kostka.polanskakeska.entity.Crossword;
+import cz.kostka.polanskakeska.entity.CrosswordPart;
 import cz.kostka.polanskakeska.entity.Team;
 import cz.kostka.polanskakeska.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,15 @@ import java.util.TimeZone;
 public class TeamService {
     private final CrosswordService crosswordService;
     private final TeamRepository teamRepository;
+    private final CrosswordPartService crosswordPartService;
 
     @Autowired
     public TeamService(final CrosswordService crosswordService,
-                       final TeamRepository teamRepository) {
+                       final TeamRepository teamRepository,
+                       final CrosswordPartService crosswordPartService) {
         this.crosswordService = crosswordService;
         this.teamRepository = teamRepository;
+        this.crosswordPartService = crosswordPartService;
     }
 
     public List<Team> getAllTeams() {
@@ -60,7 +64,11 @@ public class TeamService {
             currentCrossword = crosswordService.getById(team.getCrosswordId());
         }
 
-        currentCrossword.getPartMap().replace(cache.getNumber(), cache.getPart().getId());
+        final CrosswordPart partWithCode = crosswordPartService.getPartsOfCache(cache.getNumber()).stream()
+                .filter(crosswordPart -> crosswordPart.getCode().equals(cache.getCode()))
+                .findAny().orElseThrow();
+
+        currentCrossword.getPartMap().replace(cache.getNumber(), partWithCode.getId());
 
         crosswordService.save(currentCrossword);
         team.setCrosswordId(currentCrossword.getId());

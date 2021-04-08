@@ -11,4 +11,5 @@ import java.util.List;
 public interface CrosswordPartRepository extends JpaRepository<CrosswordPart, Long> {
     CrosswordPart getPartById(final Long cacheNumber);
     List<CrosswordPart> findByIdIn(final Collection<Long> ids);
+    List<CrosswordPart> findAllByCacheNumber(int cacheNumber);
 }

@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,8 +70,14 @@ public class CrosswordService {
         Map<Integer, Long> mapWithParts = new HashMap<>();
 
         for (int i = FIRST_CACHE; i < LAST_CACHE + 1; i++) {
-            CrosswordPart part = crosswordPartService.save(CrosswordPartUtil.getEmptyPartForCache(i));
-            mapWithParts.putIfAbsent(i, part.getId());
+            final int cacheNumber = i;
+            Optional<CrosswordPart> optionalPart = crosswordPartService.getPartsOfCache(i).stream()
+                    .filter(crosswordPart -> crosswordPart.getCacheNumber() == cacheNumber)
+                    .findFirst();
+
+            if (optionalPart.isPresent()) {
+                mapWithParts.putIfAbsent(i, optionalPart.get().getId());
+            }
         }
 
         crossword.setWordCount(CROSSWORD_LENGTH);

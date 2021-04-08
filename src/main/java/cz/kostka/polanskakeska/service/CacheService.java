@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,10 +40,20 @@ public class CacheService {
     }
 
     public Cache save(final Cache cache) {
+        cache.setCrosswordParts(Set.of(
+                createPartWithCode(cache),
+                createEmptyPart(cache.getNumber())));
+        return cacheRepository.save(cache);
+    }
+
+    private CrosswordPart createPartWithCode(final Cache cache) {
         CrosswordPart part = CrosswordPartUtil.getEmptyPartForCache(cache.getNumber());
         part.setCode(cache.getCode());
-        crosswordPartService.save(part);
-        cache.setPart(part);
-        return cacheRepository.save(cache);
+        return crosswordPartService.save(part);
+    }
+
+    private CrosswordPart createEmptyPart(final int number) {
+        CrosswordPart part = CrosswordPartUtil.getEmptyPartForCache(number);
+        return crosswordPartService.save(part);
     }
 }

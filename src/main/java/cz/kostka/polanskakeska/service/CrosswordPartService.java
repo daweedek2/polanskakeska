@@ -25,6 +25,10 @@ public class CrosswordPartService {
         return crosswordPartRepository.findByIdIn(ids);
     }
 
+    public List<CrosswordPart> getPartsOfCache(final int cacheNumber) {
+        return crosswordPartRepository.findAllByCacheNumber(cacheNumber);
+    }
+
     public CrosswordPart save(final CrosswordPart crosswordPart) {
         return crosswordPartRepository.save(crosswordPart);
     }

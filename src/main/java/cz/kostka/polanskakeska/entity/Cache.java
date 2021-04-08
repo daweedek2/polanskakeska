@@ -5,7 +5,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,15 +27,15 @@ public class Cache {
     @ElementCollection
     private Set<String> passwords = new HashSet<>();
 
-    @OneToOne
-    private CrosswordPart crosswordPart;
+    @OneToMany
+    private Set<CrosswordPart> crosswordParts;
 
-    public Cache(final Long id, final int number, final String code, final Set<String> passwords, final CrosswordPart crosswordPart) {
+    public Cache(final Long id, final int number, final String code, final Set<String> passwords, final Set<CrosswordPart> crosswordParts) {
         this.id = id;
         this.number = number;
         this.code = code;
         this.passwords = passwords;
-        this.crosswordPart = crosswordPart;
+        this.crosswordParts = crosswordParts;
     }
 
     public Cache() {
@@ -73,11 +73,11 @@ public class Cache {
         return id;
     }
 
-    public CrosswordPart getPart() {
-        return crosswordPart;
+    public Set<CrosswordPart> getCrosswordParts() {
+        return crosswordParts;
     }
 
-    public void setPart(final CrosswordPart crosswordPart) {
-        this.crosswordPart = crosswordPart;
+    public void setCrosswordParts(final Set<CrosswordPart> crosswordParts) {
+        this.crosswordParts = crosswordParts;
     }
 }
