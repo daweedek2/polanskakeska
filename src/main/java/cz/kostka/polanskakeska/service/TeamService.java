@@ -1,5 +1,6 @@
 package cz.kostka.polanskakeska.service;
 
+import cz.kostka.polanskakeska.dto.TeamFormDTO;
 import cz.kostka.polanskakeska.entity.Cache;
 import cz.kostka.polanskakeska.entity.Crossword;
 import cz.kostka.polanskakeska.entity.CrosswordPart;
@@ -10,9 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -79,5 +83,33 @@ public class TeamService {
         return LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(System.currentTimeMillis()),
                 TimeZone.getDefault().toZoneId());
+    }
+
+    public Team saveDTO(final TeamFormDTO teamFormDTO) {
+        if (!isUniqueTeamName(teamFormDTO.getName()) || !isUniqueEmail(teamFormDTO.getEmail())) {
+            return null;
+        }
+
+        Team team = new Team();
+        team.setEmail(teamFormDTO.getEmail());
+        team.setName(teamFormDTO.getName());
+
+        Set<String> members = parseMembers(teamFormDTO.getMembers());
+        team.setMembers(members);
+        team.setMembersCount(members.size());
+        return this.save(team);
+    }
+
+    private boolean isUniqueEmail(final String email) {
+        return teamRepository.findTeamByEmail(email).isEmpty();
+    }
+
+    private boolean isUniqueTeamName(final String name) {
+        return teamRepository.findTeamByName(name).isEmpty();
+    }
+
+    private Set<String> parseMembers(final String members) {
+        return Arrays.stream(members.split(","))
+                .collect(Collectors.toSet());
     }
 }

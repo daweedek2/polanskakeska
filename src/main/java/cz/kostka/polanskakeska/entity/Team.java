@@ -25,6 +25,9 @@ public class Team {
     private String email;
 
     @ElementCollection
+    private Set<String> members;
+
+    @ElementCollection
     @CollectionTable(name = "solved_cache_timestamps",
             joinColumns = {@JoinColumn(name = "team_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "cache_number")
@@ -39,7 +42,8 @@ public class Team {
 
     public Team(final Long id, final String name, final int membersCount, final String email,
                 final Map<String, LocalDateTime> solvedCachesTimestamps,
-                final Set<Cache> solvedCaches, final Long crosswordId) {
+                final Set<Cache> solvedCaches, final Long crosswordId,
+                final Set<String> members) {
         this.id = id;
         this.name = name;
         this.membersCount = membersCount;
@@ -47,6 +51,7 @@ public class Team {
         this.solvedCachesTimestamps = solvedCachesTimestamps;
         this.solvedCaches = solvedCaches;
         this.crosswordId = crosswordId;
+        this.members = members;
     }
 
     public Team() {
@@ -106,5 +111,13 @@ public class Team {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public Set<String> getMembers() {
+        return members;
+    }
+
+    public void setMembers(final Set<String> members) {
+        this.members = members;
     }
 }

@@ -7,55 +7,54 @@
     <div th:insert="fragments/header :: header()"></div>
     <div class="row">
         <div class="col-sm-12">
-            <div th:if="${cacheCreated == true}" class="alert alert-success">
-                <p><strong>Keška vytvořena!</strong></p>
+            <div th:if="${teamCreated == true}" class="alert alert-success">
+                <p><strong>Tým vytvořen!</strong></p>
             </div>
-            <div th:if="${cacheCreated == false}" class="alert alert-danger">
-                <p><strong>Keška nebyla vytvořena!</strong></p>
-                <p>Keška se stejným číslem už existuje.</p>
+            <div th:if="${teamCreated == false}" class="alert alert-danger">
+                <p><strong>Tým nebyl vytvořen!</strong></p>
+                <p>Tým se stejným názvem nebo emailem už existuje.</p>
             </div>
-            <h2>Nová keška</h2>
-            <form th:action="|/admin/cache/save|" th:object="${cacheFormDTO}" method="post">
+            <h2>Nový tým</h2>
+            <form th:action="|/admin/team/save|" th:object="${teamFormDTO}" method="post">
                 <div class="form-group">
-                    <label for="number">Číslo kešky</label>
-                    <input id="number" type="number" th:field="*{number}" class="form-control" required />
+                    <label for="teamName">Název týmu</label>
+                    <input id="teamName" type="text" th:field="*{name}" class="form-control" required />
                 </div>
                 <div class="form-group">
-                    <label for="indicie">Indície</label>
-                    <input id="indicie" type="text" th:field="*{code}" class="form-control" required />
+                    <label for="email">Email</label>
+                    <input id="email" type="email" th:field="*{email}" class="form-control" required />
                 </div>
                 <div class="form-group">
-                    <label for="passwords">Řešení</label>
-                    <small id="passwordsHelp" class="form-text text-muted">Pro zadání více možných řešení použij čárku -> Heslo1,Heslo2</small>
-                    <input id="passwords" type="text" th:field="*{passwords}" class="form-control" required />
+                    <label for="members">Členové týmu</label>
+                    <small id="membersHelp" class="form-text text-muted">Pro oddělení jmen použij čárku -> Adam,Eva</small>
+                    <input id="members" type="text" th:field="*{members}" class="form-control" required />
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit">Uložit</button>
                 </div>
             </form>
             <div>
-                <a th:href="@{/admin/team}" class="btn btn-secondary">Přejít na seznam týmů</a>
+                <a th:href="@{/admin/cache}" class="btn btn-secondary">Přejít na seznam kešek</a>
             </div>
             <br>
-
             <div class="table-responsive">
                 <table class="table">
                     <thead class="thead-light">
                     <tr>
-                        <th scope="col">Číslo</th>
-                        <th scope="col">Indície</th>
-                        <th scope="col">Řešení</th>
+                        <th scope="col">Název</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Členové</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:if="${allCaches.empty}">
-                        <td colspan="5"><p>V systému nejsou kešky</p></td>
+                    <tr th:if="${allTeams.empty}">
+                        <td colspan="5"><p>V systému nejsou týmy</p></td>
                     </tr>
-                    <th:block th:each="cache : ${allCaches}">
+                    <th:block th:each="team : ${allTeams}">
                         <tr>
-                            <td th:text="${cache.number}"></td>
-                            <td th:text="${cache.code}"></td>
-                            <td th:text="${cache.passwords}"></td>
+                            <td th:text="${team.name}"></td>
+                            <td th:text="${team.email}"></td>
+                            <td th:text="${team.members}"></td>
 <!--                            <td>-->
 <!--                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" th:utext="#{label.actions}">Akce-->
 <!--                                    <span class="caret"></span>-->
