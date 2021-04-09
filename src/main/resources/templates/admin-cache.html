@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments/head :: head('Polanská keška')">
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/header :: header()"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div th:if="${cacheCreated == true}" class="alert alert-success">
+                <p><strong>Keška vytvořena!</strong></p>
+            </div>
+            <div th:if="${cacheCreated == false}" class="alert alert-danger">
+                <p><strong>Keška nebyla vytvořena!</strong></p>
+                <p>Keška se stejným číslem už existuje.</p>
+            </div>
+            <h2>Nová keška</h2>
+            <form th:action="|/admin/cache/save|" th:object="${cacheFormDTO}" method="post">
+                <div class="form-group">
+                    <label for="number">Číslo kešky</label>
+                    <input id="number" type="number" th:field="*{number}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="indicie">Indície</label>
+                    <input id="indicie" type="text" th:field="*{code}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="passwords">Řešení</label>
+                    <small id="passwordsHelp" class="form-text text-muted">Pro zadání více možných řešení použij čárku -> Heslo1,Heslo2</small>
+                    <input id="passwords" type="text" th:field="*{passwords}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Uložit</button>
+                </div>
+            </form>
+            <div>
+                <a th:href="@{/crossword}" class="btn btn-secondary">Přejít na seznam indícií</a>
+            </div>
+            <div>
+                <a href="https://en.mapy.cz/s/bojeporumo" class="btn btn-secondary">Přejít na mapu</a>
+            </div>
+            <br>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Číslo</th>
+                        <th scope="col">Indície</th>
+                        <th scope="col">Řešení</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${allCaches.empty}">
+                        <td colspan="5"><p>V systému nejsou kešky</p></td>
+                    </tr>
+                    <th:block th:each="cache : ${allCaches}">
+                        <tr>
+                            <td th:text="${cache.number}"></td>
+                            <td th:text="${cache.code}"></td>
+                            <td th:text="${cache.passwords}"></td>
+<!--                            <td>-->
+<!--                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" th:utext="#{label.actions}">Akce-->
+<!--                                    <span class="caret"></span>-->
+<!--                                </button>-->
+<!--                                <ul class="dropdown-menu">-->
+<!--                                    <li><a href="#" th:href="@{/admin/team/update/{teamId}(teamId=${team.teamId})}" class="btn" th:utext="#{label.edit}">Upravit</a></li>-->
+<!--                                    <li><a href="#" th:href="@{/admin/team/delete/{teamId}(teamId=${team.teamId})}" class="btn" th:utext="#{label.delete}">Smazat</a></li>-->
+<!--                                </ul>-->
+<!--                            </td>-->
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div th:insert="fragments/footer :: footer()"></div>
+</div>
+</body>
+</html>

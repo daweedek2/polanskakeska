@@ -1,13 +1,17 @@
 package cz.kostka.polanskakeska.service;
 
+import cz.kostka.polanskakeska.dto.CacheFormDTO;
 import cz.kostka.polanskakeska.entity.Cache;
 import cz.kostka.polanskakeska.entity.CrosswordPart;
 import cz.kostka.polanskakeska.repository.CacheRepository;
+import cz.kostka.polanskakeska.utils.AnswerUtil;
 import cz.kostka.polanskakeska.utils.CrosswordPartUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,5 +59,30 @@ public class CacheService {
     private CrosswordPart createEmptyPart(final int number) {
         CrosswordPart part = CrosswordPartUtil.getEmptyPartForCache(number);
         return crosswordPartService.save(part);
+    }
+
+    public Cache saveFromDTO(final CacheFormDTO dto) {
+        if (!isUniqueCacheNumber(dto.getNumber())) {
+            System.out.println("Cache number is not unique");
+            return null;
+        }
+
+        Cache cache = new Cache();
+        cache.setCode(dto.getCode());
+        cache.setNumber(dto.getNumber());
+        cache.setPasswords(parsePasswords(dto.getPasswords()));
+        return this.save(cache);
+    }
+
+    private boolean isUniqueCacheNumber(final int number) {
+        return this.getCacheByNumber(number).isEmpty();
+    }
+
+    private Set<String> parsePasswords(final String passwords) {
+        return Arrays.stream(passwords
+                .toLowerCase(Locale.ROOT)
+                .split(","))
+                .map(AnswerUtil::normalize)
+                .collect(Collectors.toSet());
     }
 }
