@@ -72,6 +72,7 @@ public class CrosswordService {
         for (int i = FIRST_CACHE; i < LAST_CACHE + 1; i++) {
             final int cacheNumber = i;
             Optional<CrosswordPart> optionalPart = crosswordPartService.getPartsOfCache(i).stream()
+                    .filter(crosswordPart -> crosswordPart.getCode().contains("_"))
                     .filter(crosswordPart -> crosswordPart.getCacheNumber() == cacheNumber)
                     .findFirst();
 

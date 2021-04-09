@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="fragments/head :: head('Polanská keška')">
+</head>
+<body>
+<div class="container">
+    <div th:insert="fragments/header :: header()"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 th:text="${teamDetail.name}"></h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Číslo kešky</th>
+                        <th scope="col">Indície</th>
+                        <th scope="col">Čas vyřešní</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="cache : ${teamDetail.solvedCaches}">
+                        <tr th:with="timestamp=${teamDetail.solvedCachesTimestamps.get(#strings.toString(cache.number))}">
+                            <td th:text="${cache.number}"></td>
+                            <td th:text="${cache.code}"></td>
+                            <td th:text="${#temporals.format(timestamp, 'dd.MM.yyyy HH:mm')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div th:insert="fragments/footer :: footer()"></div>
+</div>
+</body>
+</html>

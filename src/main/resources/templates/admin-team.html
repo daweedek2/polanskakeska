@@ -44,6 +44,7 @@
                         <th scope="col">Název</th>
                         <th scope="col">Email</th>
                         <th scope="col">Členové</th>
+                        <th scope="col"> </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,15 +56,9 @@
                             <td th:text="${team.name}"></td>
                             <td th:text="${team.email}"></td>
                             <td th:text="${team.members}"></td>
-<!--                            <td>-->
-<!--                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" th:utext="#{label.actions}">Akce-->
-<!--                                    <span class="caret"></span>-->
-<!--                                </button>-->
-<!--                                <ul class="dropdown-menu">-->
-<!--                                    <li><a href="#" th:href="@{/admin/team/update/{teamId}(teamId=${team.teamId})}" class="btn" th:utext="#{label.edit}">Upravit</a></li>-->
-<!--                                    <li><a href="#" th:href="@{/admin/team/delete/{teamId}(teamId=${team.teamId})}" class="btn" th:utext="#{label.delete}">Smazat</a></li>-->
-<!--                                </ul>-->
-<!--                            </td>-->
+                            <td>
+                                <a href="#" th:href="@{/admin/team/{teamName}(teamName=${team.name})}" class="btn">Detail</a></li>
+                            </td>
                         </tr>
                     </th:block>
                     </tbody>

@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -40,9 +38,10 @@ public class TeamController {
         return teamService.getAllTeams();
     }
 
-    @GetMapping("/get/{teamName}")
-    public Team getTeam(final @PathVariable String teamName) {
-        return teamService.getTeamByName(teamName).get();
+    @GetMapping("/{teamName}")
+    public String getTeam(final @PathVariable String teamName, final Model model) {
+        model.addAttribute("teamDetail", teamService.getTeamByName(teamName).get());
+        return "admin-team-detail";
     }
 
     @PostMapping("/save")
