@@ -1,6 +1,7 @@
 package cz.kostka.polanskakeska.utils;
 
 import java.text.Normalizer;
+import java.util.Locale;
 
 public class AnswerUtil {
 
@@ -11,6 +12,7 @@ public class AnswerUtil {
     public static String normalize(final String answer) {
         return Normalizer
                 .normalize(answer, Normalizer.Form.NFD)
-                .replaceAll("[^\\p{ASCII}]", "");
+                .replaceAll("[^\\p{ASCII}]", "")
+                .toLowerCase(Locale.ROOT);
     }
 }
