@@ -38,8 +38,8 @@ public class TeamService {
     }
 
     public Team save(final Team team) {
-        if (team.getCrosswordId() == null) {
-            team.setCrosswordId(crosswordService.createEmptyCrossword().getId());
+        if (team.getCrossword() == null) {
+            team.setCrossword(crosswordService.createEmptyCrossword());
         }
         return teamRepository.save(team);
     }
@@ -56,27 +56,37 @@ public class TeamService {
         final LocalDateTime currentTime = getCurrentTime();
         team.getSolvedCaches().add(cache);
         team.getSolvedCachesTimestamps().putIfAbsent(String.valueOf(cache.getNumber()), currentTime);
-        updateTeamCrossword(team, cache);
+        updateTeamCrossword(team, cache, true);
         this.save(team);
     }
 
-    private void updateTeamCrossword(final Team team, final Cache cache) {
+    private void updateTeamCrossword(final Team team, final Cache cache, final boolean solve) {
         Crossword currentCrossword;
-        if (team.getCrosswordId() == null || crosswordService.getById(team.getCrosswordId()) == null) {
+        if (team.getCrossword().getId() == null || crosswordService.getById(team.getCrossword().getId()) == null) {
             currentCrossword = crosswordService.createEmptyCrossword();
         } else {
-            currentCrossword = crosswordService.getById(team.getCrosswordId());
+            currentCrossword = crosswordService.getById(team.getCrossword().getId());
         }
 
-        final CrosswordPart partWithCode = crosswordPartService.getPartsOfCache(cache.getNumber()).stream()
-                .filter(crosswordPart -> crosswordPart.getCode().equals(cache.getCode()))
-                .findAny().orElseThrow();
+        final CrosswordPart partWithCode = solve ? getPartWithCode(cache) : getPartWithoutCode(cache);
 
         currentCrossword.getPartMap().replace(cache.getNumber(), partWithCode.getId());
 
         crosswordService.save(currentCrossword);
-        team.setCrosswordId(currentCrossword.getId());
+        team.setCrossword(currentCrossword);
         this.save(team);
+    }
+
+    private CrosswordPart getPartWithCode(final Cache cache) {
+        return crosswordPartService.getPartsOfCache(cache.getNumber()).stream()
+                .filter(crosswordPart -> crosswordPart.getCode().equals(cache.getCode()))
+                .findAny().orElseThrow();
+    }
+
+    private CrosswordPart getPartWithoutCode(final Cache cache) {
+        return crosswordPartService.getPartsOfCache(cache.getNumber()).stream()
+                .filter(crosswordPart -> crosswordPart.getCode().contains("_"))
+                .findAny().orElseThrow();
     }
 
     private LocalDateTime getCurrentTime() {

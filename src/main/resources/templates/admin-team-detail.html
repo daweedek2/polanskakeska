@@ -8,6 +8,7 @@
     <div class="row">
         <div class="col-sm-12">
             <h2 th:text="${teamDetail.name}"></h2>
+            <br>
             <div class="table-responsive">
                 <table class="table">
                     <thead class="thead-light">
@@ -15,15 +16,25 @@
                         <th scope="col">Číslo kešky</th>
                         <th scope="col">Indície</th>
                         <th scope="col">Čas vyřešní</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="cache : ${teamDetail.solvedCaches}">
-                        <tr th:with="timestamp=${teamDetail.solvedCachesTimestamps.get(#strings.toString(cache.number))}">
-                            <td th:text="${cache.number}"></td>
-                            <td th:text="${cache.code}"></td>
+                    <th:block th:each="part : ${crosswordParts}">
+                        <tr th:with="timestamp=${teamDetail.solvedCachesTimestamps.get(#strings.toString(part.cacheNumber))}">
+                            <td th:text="${part.cacheNumber}"></td>
+                            <td th:text="${part.code}"></td>
                             <td th:text="${#temporals.format(timestamp, 'dd.MM.yyyy HH:mm')}"></td>
+                            <td>
+                                <div th:if="${#strings.contains(part.code, '_')}">
+                                    <a class="btn" th:href="@{/admin/team/solve(teamName=${teamDetail.name}, cacheNumber=${part.cacheNumber})}">Vyřešit</a>
+                                </div>
+                                <div th:unless="${#strings.contains(part.code, '_')}">
+                                    <p class="team-status-badge-finished"> Vyřešeno</p>
+                                </div>
+                            </td>
                         </tr>
+                    </th:block>
                     </tbody>
                 </table>
             </div>

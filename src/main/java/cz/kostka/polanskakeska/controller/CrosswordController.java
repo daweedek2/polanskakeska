@@ -42,7 +42,7 @@ public class CrosswordController {
         Team team = validationService.validateCrosswordRequest(dto);
 
         if (team != null) {
-            final CrosswordDetailDTO crosswordDTO = crosswordService.buildDetail(team.getCrosswordId());
+            final CrosswordDetailDTO crosswordDTO = crosswordService.buildDetail(team.getCrossword());
             redirectAttributes.addFlashAttribute("crossword", crosswordDTO);
         } else {
             redirectAttributes.addFlashAttribute("result",
