@@ -15,6 +15,9 @@ public class Crossword {
     @Column
     private int wordCount;
 
+    @OneToOne
+    private Team team;
+
     @ElementCollection
     @CollectionTable(name = "parts_map",
             joinColumns = {@JoinColumn(name = "id", referencedColumnName = "id")})
@@ -53,5 +56,13 @@ public class Crossword {
 
     public void setPartMap(final Map<Integer, Long> partMap) {
         this.partMap = partMap;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(final Team team) {
+        this.team = team;
     }
 }

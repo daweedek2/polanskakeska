@@ -33,8 +33,7 @@ public class CrosswordService {
         this.crosswordPartService = crosswordPartService;
     }
 
-    public CrosswordDetailDTO buildDetail(final Long crosswordId) {
-        final Crossword crossword = getById(crosswordId);
+    public CrosswordDetailDTO buildDetail(final Crossword crossword) {
         final int wordCount = crossword.getWordCount();
 
         final List<CrosswordPart> crosswordParts = crosswordPartService.getAllByIds(crossword.getPartMap().values());

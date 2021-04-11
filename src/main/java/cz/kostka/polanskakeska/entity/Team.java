@@ -37,12 +37,12 @@ public class Team {
     @ElementCollection
     private Set<Cache> solvedCaches = new HashSet<>();
 
-    @Column
-    private Long crosswordId;
+    @OneToOne
+    private Crossword crossword;
 
     public Team(final Long id, final String name, final int membersCount, final String email,
                 final Map<String, LocalDateTime> solvedCachesTimestamps,
-                final Set<Cache> solvedCaches, final Long crosswordId,
+                final Set<Cache> solvedCaches, final Crossword crosswordId,
                 final Set<String> members) {
         this.id = id;
         this.name = name;
@@ -50,7 +50,7 @@ public class Team {
         this.email = email;
         this.solvedCachesTimestamps = solvedCachesTimestamps;
         this.solvedCaches = solvedCaches;
-        this.crosswordId = crosswordId;
+        this.crossword = crossword;
         this.members = members;
     }
 
@@ -97,12 +97,12 @@ public class Team {
         this.membersCount = membersCount;
     }
 
-    public Long getCrosswordId() {
-        return crosswordId;
+    public Crossword getCrossword() {
+        return crossword;
     }
 
-    public void setCrosswordId(final Long crosswordId) {
-        this.crosswordId = crosswordId;
+    public void setCrossword(final Crossword crossword) {
+        this.crossword = crossword;
     }
 
     public String getEmail() {
