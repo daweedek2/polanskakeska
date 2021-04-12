@@ -1,5 +1,6 @@
 package cz.kostka.polanskakeska.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -7,7 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,12 +33,20 @@ public class Cache {
     @OneToMany
     private Set<CrosswordPart> crosswordParts;
 
-    public Cache(final Long id, final int number, final String code, final Set<String> passwords, final Set<CrosswordPart> crosswordParts) {
+    @OneToMany(
+            mappedBy = "cache",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Answer> answers = new ArrayList<>();
+
+    public Cache(final Long id, final int number, final String code, final Set<String> passwords, final Set<CrosswordPart> crosswordParts, final List<Answer> answers) {
         this.id = id;
         this.number = number;
         this.code = code;
         this.passwords = passwords;
         this.crosswordParts = crosswordParts;
+        this.answers = answers;
     }
 
     public Cache() {
@@ -79,5 +90,13 @@ public class Cache {
 
     public void setCrosswordParts(final Set<CrosswordPart> crosswordParts) {
         this.crosswordParts = crosswordParts;
+    }
+
+    public List<Answer> getAnswer() {
+        return answers;
+    }
+
+    public void setAnswer(final List<Answer> answers) {
+        this.answers = answers;
     }
 }

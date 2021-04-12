@@ -1,6 +1,7 @@
 package cz.kostka.polanskakeska.service;
 
 import cz.kostka.polanskakeska.dto.TeamFormDTO;
+import cz.kostka.polanskakeska.entity.Answer;
 import cz.kostka.polanskakeska.entity.Cache;
 import cz.kostka.polanskakeska.entity.Crossword;
 import cz.kostka.polanskakeska.entity.CrosswordPart;
@@ -52,11 +53,11 @@ public class TeamService {
         return teamRepository.findTeamByName(teamName);
     }
 
-    public void addSolvedCache(final Team team, final Cache cache) {
-        final LocalDateTime currentTime = getCurrentTime();
-        team.getSolvedCaches().add(cache);
-        team.getSolvedCachesTimestamps().putIfAbsent(String.valueOf(cache.getNumber()), currentTime);
-        updateTeamCrossword(team, cache, true);
+    public void addSolvedCache(final Answer answer) {
+        final Team team = answer.getTeam();
+        team.getSolvedCaches().add(answer.getCache());
+        team.getSolvedCachesTimestamps().putIfAbsent(String.valueOf(answer.getCache().getNumber()), answer.getTimestamp());
+        updateTeamCrossword(team, answer.getCache(), true);
         this.save(team);
     }
 
@@ -87,12 +88,6 @@ public class TeamService {
         return crosswordPartService.getPartsOfCache(cache.getNumber()).stream()
                 .filter(crosswordPart -> crosswordPart.getCode().contains("_"))
                 .findAny().orElseThrow();
-    }
-
-    private LocalDateTime getCurrentTime() {
-        return LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(System.currentTimeMillis()),
-                TimeZone.getDefault().toZoneId());
     }
 
     public Team saveDTO(final TeamFormDTO teamFormDTO) {

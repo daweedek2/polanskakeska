@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,16 +41,24 @@ public class Team {
     @OneToOne
     private Crossword crossword;
 
+    @OneToMany(
+            mappedBy = "team",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Answer> answers;
+
     public Team(final Long id, final String name, final int membersCount, final String email,
                 final Map<String, LocalDateTime> solvedCachesTimestamps,
                 final Set<Cache> solvedCaches, final Crossword crosswordId,
-                final Set<String> members) {
+                final Set<String> members, final List<Answer> answers) {
         this.id = id;
         this.name = name;
         this.membersCount = membersCount;
         this.email = email;
         this.solvedCachesTimestamps = solvedCachesTimestamps;
         this.solvedCaches = solvedCaches;
+        this.answers = answers;
         this.crossword = crossword;
         this.members = members;
     }
@@ -119,5 +128,13 @@ public class Team {
 
     public void setMembers(final Set<String> members) {
         this.members = members;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(final List<Answer> answer) {
+        this.answers = answer;
     }
 }
