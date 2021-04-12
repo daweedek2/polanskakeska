@@ -36,9 +36,9 @@
                     <p th:if="${#fields.hasErrors('email')}" th:class="'error'" th:errors="*{email}" id="emailErrorMessage"></p>
                 </div>
                 <div class="form-group">
-                    <label for="answer">Řešení</label>
-                    <input id="answer" type="text" th:field="*{answer}" class="form-control" required />
-                    <p th:if="${#fields.hasErrors('answer')}" th:class="'error'" th:errors="*{answer}" id="answerErrorMessage"></p>
+                    <label for="solution">Řešení</label>
+                    <input id="solution" type="text" th:field="*{solution}" class="form-control" required />
+                    <p th:if="${#fields.hasErrors('solution')}" th:class="'error'" th:errors="*{solution}" id="solutionErrorMessage"></p>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit">Ověřit</button>

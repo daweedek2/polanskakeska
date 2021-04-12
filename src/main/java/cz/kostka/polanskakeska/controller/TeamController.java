@@ -1,8 +1,10 @@
 package cz.kostka.polanskakeska.controller;
 
 import cz.kostka.polanskakeska.dto.TeamFormDTO;
+import cz.kostka.polanskakeska.entity.Answer;
 import cz.kostka.polanskakeska.entity.CrosswordPart;
 import cz.kostka.polanskakeska.entity.Team;
+import cz.kostka.polanskakeska.service.AnswerService;
 import cz.kostka.polanskakeska.service.CacheService;
 import cz.kostka.polanskakeska.service.CrosswordPartService;
 import cz.kostka.polanskakeska.service.TeamService;
@@ -25,14 +27,17 @@ public class TeamController {
     private final TeamService teamService;
     private final CrosswordPartService crosswordPartService;
     private final CacheService cacheService;
+    private final AnswerService answerService;
 
     @Autowired
     public TeamController(final TeamService teamService,
                           final CrosswordPartService crosswordPartService,
-                          final CacheService cacheService) {
+                          final CacheService cacheService,
+                          final AnswerService answerService) {
         this.teamService = teamService;
         this.crosswordPartService = crosswordPartService;
         this.cacheService = cacheService;
+        this.answerService = answerService;
     }
 
     @GetMapping
@@ -75,7 +80,12 @@ public class TeamController {
             final @RequestParam("teamName") String teamName,
             final @RequestParam("cacheNumber") int cacheNumber) {
 
-        teamService.addSolvedCache(teamService.getTeamByName(teamName).get(), cacheService.getCacheByNumber(cacheNumber).get());
+        final Answer answer = answerService.save(new Answer(
+                teamService.getTeamByName(teamName).get(),
+                cacheService.getCacheByNumber(cacheNumber).get(),
+                "změněno adminem"));
+
+        teamService.addSolvedCache(answer);
         return "redirect:/admin/team/" + teamName;
     }
 }

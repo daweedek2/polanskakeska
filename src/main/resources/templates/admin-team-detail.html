@@ -16,6 +16,7 @@
                         <th scope="col">Číslo kešky</th>
                         <th scope="col">Indície</th>
                         <th scope="col">Čas vyřešní</th>
+                        <th scope="col">Odpovědi</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -25,6 +26,13 @@
                             <td th:text="${part.cacheNumber}"></td>
                             <td th:text="${part.code}"></td>
                             <td th:text="${#temporals.format(timestamp, 'dd.MM.yyyy HH:mm')}"></td>
+                            <td>
+                                <div th:each="answer: ${teamDetail.answers}">
+                                    <div th:if="${answer.cache.number == part.cacheNumber}">
+                                        <span th:text="${answer.text}"></span>
+                                    </div>
+                                </div>
+                            </td>
                             <td>
                                 <div th:if="${#strings.contains(part.code, '_')}">
                                     <a class="btn" th:href="@{/admin/team/solve(teamName=${teamDetail.name}, cacheNumber=${part.cacheNumber})}">Vyřešit</a>

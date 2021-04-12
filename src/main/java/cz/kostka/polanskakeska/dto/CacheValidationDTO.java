@@ -4,13 +4,13 @@ public class CacheValidationDTO {
     private int cacheNumber;
     private String teamName;
     private String email;
-    private String answer;
+    private String solution;
 
-    public CacheValidationDTO(final int cacheNumber, final String teamName, final String email, final String answer) {
+    public CacheValidationDTO(final int cacheNumber, final String teamName, final String email, final String solution) {
         this.cacheNumber = cacheNumber;
         this.teamName = teamName;
         this.email = email;
-        this.answer = answer;
+        this.solution = solution;
     }
 
     public CacheValidationDTO() {
@@ -32,12 +32,12 @@ public class CacheValidationDTO {
         this.teamName = teamName;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getSolution() {
+        return solution;
     }
 
-    public void setAnswer(final String answer) {
-        this.answer = answer;
+    public void setSolution(final String solution) {
+        this.solution = solution;
     }
 
     public String getEmail() {
