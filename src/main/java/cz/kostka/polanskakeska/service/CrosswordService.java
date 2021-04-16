@@ -66,6 +66,8 @@ public class CrosswordService {
     public Crossword createEmptyCrossword() {
         Crossword crossword = new Crossword();
 
+
+
         Map<Integer, Long> mapWithParts = new HashMap<>();
 
         for (int i = FIRST_CACHE; i < LAST_CACHE + 1; i++) {
